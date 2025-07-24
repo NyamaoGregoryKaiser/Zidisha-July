@@ -103,8 +103,8 @@ st.plotly_chart(fig, use_container_width=True)
 # Trend Visualization for the Past 1 Week
 st.subheader('Disbursement and Repayment Trend (Last 7 Days)')
 
-# Get current date (2025-07-16 from user system)
-current_date = pd.Timestamp('2025-07-16')
+# Get current date dynamically
+current_date = pd.Timestamp(datetime.now())
 last_7_days = [current_date - pd.Timedelta(days=i) for i in range(6, -1, -1)]
 
 # Prepare daily disbursement
