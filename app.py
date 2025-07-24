@@ -98,35 +98,4 @@ fig = px.bar(
     labels={'Amount': 'Ksh Amount'},
 )
 fig.update_layout(xaxis_tickangle=-45)
-st.plotly_chart(fig, use_container_width=True)
-
-# Trend Visualization for the Past 1 Week
-st.subheader('Disbursement and Repayment Trend (Last 7 Days)')
-
-# Get current date dynamically
-current_date = pd.Timestamp(datetime.now())
-last_7_days = [current_date - pd.Timedelta(days=i) for i in range(6, -1, -1)]
-
-# Prepare daily disbursement
-trend_df = filtered_df.copy()
-trend_df['Disbursed On Date'] = pd.to_datetime(trend_df['Disbursed On Date'], errors='coerce')
-
-# Group by disbursement date for the last 7 days
-mask = trend_df['Disbursed On Date'].isin(last_7_days)
-daily_disbursed = trend_df[mask].groupby('Disbursed On Date')['Principal Amount'].sum().reindex(last_7_days, fill_value=0)
-
-# For repayment, since there is no repayment date, we will show cumulative repayment for loans disbursed on each day
-# (If you have a repayment date column, replace this logic accordingly)
-daily_repayment = trend_df[mask].groupby('Disbursed On Date')['Total Repayment'].sum().reindex(last_7_days, fill_value=0)
-
-trend_plot_df = pd.DataFrame({
-    'Date': [d.date() for d in last_7_days],
-    'Disbursed': daily_disbursed.values,
-    'Repaid': daily_repayment.values
-})
-
-fig_trend = px.line(trend_plot_df, x='Date', y=['Disbursed', 'Repaid'], markers=True,
-                    labels={'value': 'Ksh Amount', 'variable': 'Type'},
-                    title='Disbursement and Repayment Trend (Last 7 Days)')
-fig_trend.update_layout(xaxis_title='Date', yaxis_title='Ksh Amount')
-st.plotly_chart(fig_trend, use_container_width=True) 
+st.plotly_chart(fig, use_container_width=True) 
